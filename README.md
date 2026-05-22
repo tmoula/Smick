@@ -160,11 +160,35 @@ When a detection fires, the chatbot receives:
 
 ---
 
-## Contributing
+## How you can help
 
-If you have a VOD clip Smick misses, open an issue with the timestamp. That's the fastest way to improve it.
+This project runs on a $50/month VPS and a genuine belief that the right message at the right moment can change someone's life. I'm one person building this. Every contribution — code, data, or just a star — directly helps me reach more people.
 
-If you've quit smoking and want to share your story with streamers, reach out. That's really what this is about.
+### ⭐ Star this repo
+
+Sounds small. It isn't. Stars push this into GitHub trending, which gets it in front of developers who might add features, researchers who work on vision models, and ex-smokers who want to get involved. If this project resonates with you at all, the star is the easiest thing you can do.
+
+### 🐛 Improve the detector
+
+The model misses smoking moments in challenging lighting — heavy neon, dark rooms, fast cuts. If you have a VOD clip where Smick fails, open an issue with the stream URL and timestamp. I'll use it to fine-tune.
+
+Skills that would move the needle most right now:
+- **ML / computer vision** — help fine-tune YOLOv8 on real streamer footage
+- **Python / streaming** — improve the frame pipeline, add Twitch live support
+- **Node / TypeScript** — build out the dashboard and webhook integrations
+- **NLP** — generate personalised, moment-aware chat messages instead of a static template
+
+### 💬 Share your story
+
+If you've quit smoking and you're open to sharing it, I want to turn your story into a pinned message. Real stories from real people work better than any generated copy. Reach out via an issue or email.
+
+### 📣 Tell a streamer
+
+Know a streamer who smokes on camera? Send them this repo. I'm not trying to shame anyone — just start a conversation. Five people quit because a streamer took 30 seconds to pin a message. That's all it takes.
+
+---
+
+> *"Quitting taught me how easily we get manipulated as a crowd. I had been smoking to maintain a persona that wasn't mine. Letting go of that unlocked a happier version of myself. I want to help other people feel the same way."*
 
 ---
 
