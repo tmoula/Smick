@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/smokewatch-ui/"
+title = "SmokeWatch Simulator"
+version = "1.0.0"
+id = "artifacts/smokewatch-ui"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/smokewatch-ui/" ]
+localPort = 23192
+
+[services.development]
+run = "pnpm --filter @workspace/smokewatch-ui run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/smokewatch-ui", "run", "build" ]
+publicDir = "artifacts/smokewatch-ui/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "23192"
+BASE_PATH = "/smokewatch-ui/"

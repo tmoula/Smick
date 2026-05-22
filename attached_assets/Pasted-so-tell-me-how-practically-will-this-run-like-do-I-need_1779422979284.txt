@@ -1,0 +1,109 @@
+so tell me how practically will this run? like do I need permisision of strewamers? or what ? "how this is runnable? "Here's your Replit prompt:
+---
+**Build a smoking detection and chat intervention system for live streamers — fully free, end-to-end.**
+## Project Overview
+Build a Python-based pipeline that monitors live Twitch/Kick streams for smoking behavior, and automatically injects awareness messages into the stream's chat when a cigarette is detected.
+---
+## Stack (100% Free)
+- **Python 3.11**
+- **OpenCV** — video frame capture and preprocessing
+- **YOLOv8n (Ultralytics)** — free, lightweight object detection model (nano variant to minimize compute); detect class: `cigarette`. Use a pretrained COCO-based or fine-tuned cigarette detection model from Hugging Face (free).
+- **Streamlink** — pulls live stream video into a local pipe without downloading; supports Twitch and Kick
+- **TwitchIO / Kick API (unofficial)** — free bot libraries for sending chat messages
+- **FastAPI** — lightweight webhook receiver
+- **asyncio + aiohttp** — async task handling
+- **SQLite** — store streamer configs, detection logs, and message history locally
+- **dotenv** — manage credentials
+---
+## Architecture
+Build the following components:
+### 1. Stream Ingestor (`ingestor.py`)
+- Use `streamlink` to open a live stream URL (Twitch or Kick) as a low-bandwidth pipe
+- Capture frames using `cv2.VideoCapture` on the streamlink pipe
+- Downsample to **360p** and process at **0.5 Hz** (one frame every 2 seconds) to minimize CPU/memory overhead
+- For each frame, pass to the detector module
+- Run one ingestor per streamer as an **async worker**; support up to 10 concurrent streamers
+### 2. Cigarette Detector (`detector.py`)
+- Load **YOLOv8n** with a cigarette-capable weights file
+- On each sampled frame, run inference with a confidence threshold of **0.6**
+- If a cigarette is detected, fire a webhook event via `aiohttp` POST to the local FastAPI server
+- Include in the payload: `streamer_name`, `platform`, `timestamp`, `confidence_score`
+- Implement a **cooldown timer per streamer** (minimum 5 minutes between triggers) to avoid message spam
+### 3. Webhook Server (`webhook.py`)
+- FastAPI app exposing a `POST /trigger` endpoint
+- On receiving a trigger payload, look up the streamer's platform and credentials from SQLite
+- Call the appropriate chat bot module
+- Log the event to SQLite: timestamp, streamer, confidence, message sent
+### 4. Chat Bot (`chatbot.py`)
+- **Twitch:** use `TwitchIO` to connect a bot account and send a message to the streamer's channel
+- **Kick:** use HTTP POST to Kick's unofficial chat API
+- Message template (randomize from a pool of 3–5 variants to avoid spam filters):
+  - Include a short personal quitting story (1 sentence)
+  - Include the book link: `allencart.com` *(or whichever link the user sets in config)*
+  - Keep under 300 characters
+- Support a `DRY_RUN` env flag that prints the message without sending, for testing
+### 5. Streamer Config Manager (`config.py` + `streamers.db`)
+- SQLite table: `streamers(id, name, platform, stream_url, chat_credentials, active, cooldown_last_fired)`
+- CLI script `add_streamer.py` to add/remove streamers interactively
+- Load all active streamers on startup and spin up async ingestor workers for each
+### 6. Orchestrator (`main.py`)
+- On launch, read all active streamers from SQLite
+- Spawn one async ingestor task per streamer using `asyncio.gather`
+- Start the FastAPI webhook server in the same async loop using `uvicorn`
+- Graceful shutdown on `CTRL+C`: close all stream pipes cleanly
+---
+## File Structure
+```
+/
+├── main.py
+├── ingestor.py
+├── detector.py
+├── webhook.py
+├── chatbot.py
+├── config.py
+├── add_streamer.py
+├── models/
+│   └── yolov8n_cigarette.pt   ← download instructions in README
+├── streamers.db
+├── .env
+├── requirements.txt
+└── README.md
+```
+---
+## .env Template
+```
+TWITCH_BOT_TOKEN=
+TWITCH_BOT_USERNAME=
+KICK_SESSION_TOKEN=
+DRY_RUN=true
+WEBHOOK_SECRET=any_random_string
+COOLDOWN_MINUTES=5
+```
+---
+## requirements.txt
+```
+ultralytics
+opencv-python-headless
+streamlink
+twitchio
+fastapi
+uvicorn
+aiohttp
+aiosqlite
+python-dotenv
+```
+---
+## README Instructions to Include
+- How to download the free YOLOv8n cigarette weights from Hugging Face
+- How to create a free Twitch bot account and get an OAuth token via `twitchtokengenerator.com`
+- How to run: `python main.py`
+- How to add a streamer: `python add_streamer.py`
+- How to test with `DRY_RUN=true`
+---
+## Constraints
+- No paid APIs
+- No cloud services — runs entirely on a single **Hetzner CX11 VPS ($4–$15/month)**
+- All ML inference runs locally on CPU (YOLOv8n is fast enough at 0.5 Hz)
+- Must handle stream going offline gracefully: retry connection every 60 seconds
+- Must not exceed ~40% CPU on a 2-core VPS when monitoring 10 streams simultaneously
+---"

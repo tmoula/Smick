@@ -1,0 +1,254 @@
+openapi: 3.1.0
+info:
+  # Do not change the title, if the title changes, the import paths will be broken
+  title: Api
+  version: 0.1.0
+  description: SmokeWatch Simulator API
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+  - name: simulate
+    description: Stream simulation and dry-run detection
+  - name: messages
+    description: Chat message pool management
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      description: Returns server health status
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+
+  /simulate/start:
+    post:
+      operationId: startSimulation
+      tags: [simulate]
+      summary: Start a simulation session
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SimulationInput"
+      responses:
+        "201":
+          description: Session created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SimulationSession"
+        "400":
+          description: Invalid input
+
+  /simulate/sessions:
+    get:
+      operationId: listSessions
+      tags: [simulate]
+      summary: List all simulation sessions
+      responses:
+        "200":
+          description: Session list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SimulationSession"
+
+  /simulate/{sessionId}:
+    delete:
+      operationId: stopSimulation
+      tags: [simulate]
+      summary: Stop a simulation session
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Stopped
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+        "404":
+          description: Session not found
+
+  /simulate/{sessionId}/log:
+    get:
+      operationId: getSessionLog
+      tags: [simulate]
+      summary: Get detection log for a session
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Detection events
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/DetectionEvent"
+        "404":
+          description: Session not found
+
+  /simulate/log:
+    get:
+      operationId: getAllLogs
+      tags: [simulate]
+      summary: Get all detection events across all sessions
+      responses:
+        "200":
+          description: All detection events
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/DetectionEvent"
+
+  /messages:
+    get:
+      operationId: getMessages
+      tags: [messages]
+      summary: Get the chat message pool
+      responses:
+        "200":
+          description: Message pool
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessagePool"
+    put:
+      operationId: updateMessages
+      tags: [messages]
+      summary: Replace the chat message pool
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MessagePool"
+      responses:
+        "200":
+          description: Updated pool
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessagePool"
+
+components:
+  schemas:
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+      required:
+        - status
+
+    SimulationInput:
+      type: object
+      required:
+        - streamUrl
+      properties:
+        streamUrl:
+          type: string
+          description: Twitch or Kick stream URL
+        cooldownMinutes:
+          type: number
+          description: Minimum minutes between detections
+          default: 5
+        confidenceThreshold:
+          type: number
+          description: Minimum confidence score to trigger (0–1)
+          default: 0.6
+
+    SimulationSession:
+      type: object
+      required:
+        - sessionId
+        - streamUrl
+        - status
+        - startedAt
+        - detectionCount
+        - cooldownMinutes
+        - confidenceThreshold
+      properties:
+        sessionId:
+          type: string
+        streamUrl:
+          type: string
+        status:
+          type: string
+          enum: [running, stopped]
+        startedAt:
+          type: string
+        stoppedAt:
+          type: ["string", "null"]
+        detectionCount:
+          type: integer
+        cooldownMinutes:
+          type: number
+        confidenceThreshold:
+          type: number
+        lastDetectedAt:
+          type: ["string", "null"]
+
+    DetectionEvent:
+      type: object
+      required:
+        - eventId
+        - sessionId
+        - streamUrl
+        - timestamp
+        - confidence
+        - messageSent
+        - blockedByCooldown
+      properties:
+        eventId:
+          type: string
+        sessionId:
+          type: string
+        streamUrl:
+          type: string
+        timestamp:
+          type: string
+        confidence:
+          type: number
+        messageSent:
+          type: ["string", "null"]
+        blockedByCooldown:
+          type: boolean
+        frameNumber:
+          type: integer
+
+    MessagePool:
+      type: object
+      required:
+        - messages
+        - link
+      properties:
+        messages:
+          type: array
+          items:
+            type: string
+        link:
+          type: string

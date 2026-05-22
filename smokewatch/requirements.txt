@@ -1,0 +1,9 @@
+ultralytics
+opencv-python-headless
+streamlink
+twitchio
+fastapi
+uvicorn[standard]
+aiohttp
+aiosqlite
+python-dotenv
