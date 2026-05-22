@@ -24,8 +24,6 @@ I want to reach 1,000 by the end of the year.
 
 Doing this by hand doesn't scale. I'd have to watch hundreds of hours of footage to catch the right moments. So I built Smick: a lightweight computer-vision system that monitors livestreams in real time, detects the exact moment someone smokes on camera, and fires a chatbot message — along with the book — right when viewers are most psychologically open to it.
 
-I run it on a Hetzner VPS for about **$50/month**, monitoring 10 streamers at a time.
-
 ---
 
 ## How it works
