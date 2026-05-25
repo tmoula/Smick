@@ -1,4 +1,4 @@
-# Smick
+# Switch
 
 ![Python](https://img.shields.io/badge/Python-3.10%2B-blue?style=flat-square&logo=python&logoColor=white)
 ![YOLOv8](https://img.shields.io/badge/YOLOv8-Ultralytics-purple?style=flat-square)
@@ -22,7 +22,7 @@ I want to reach 1,000 by the end of the year.
 
 ## The problem
 
-Doing this by hand doesn't scale. I'd have to watch hundreds of hours of footage to catch the right moments. So I built Smick: a lightweight computer-vision system that monitors livestreams in real time, detects the exact moment someone smokes on camera, and fires a chatbot message — along with the book — right when viewers are most psychologically open to it.
+Doing this by hand doesn't scale. I'd have to watch hundreds of hours of footage to catch the right moments. So I built Switch: a lightweight computer-vision system that monitors livestreams in real time, detects the exact moment someone smokes on camera, and fires a chatbot message — along with the book — right when viewers are most psychologically open to it.
 
 ---
 
@@ -168,7 +168,7 @@ Sounds small. It isn't. Stars push this into GitHub trending, which gets it in f
 
 ### 🐛 Improve the detector
 
-The model misses smoking moments in challenging lighting — heavy neon, dark rooms, fast cuts. If you have a VOD clip where Smick fails, open an issue with the stream URL and timestamp. I'll use it to fine-tune.
+The model misses smoking moments in challenging lighting — heavy neon, dark rooms, fast cuts. If you have a VOD clip where Switch fails, open an issue with the stream URL and timestamp. I'll use it to fine-tune.
 
 Skills that would move the needle most right now:
 - **ML / computer vision** — help fine-tune YOLOv8 on real streamer footage
