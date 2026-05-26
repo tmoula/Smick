@@ -7,7 +7,7 @@
 ![Goal](https://img.shields.io/badge/Goal-1%2C000%20people%20quit-red?style=flat-square)
 
 ---
-
+Webiste: [Switch]([url](https://practical-run.replit.app/smokewatch-ui/real-detect))
 My roommate Jude quit smoking after reading *Easy Way to Quit Smoking*. So did I. I thought that was the end of the story.
 
 Then I noticed something: every time a streamer lit a cigarette on camera, the craving came back. Not because I wanted to smoke — but because watching someone do it live, casually, mid-conversation, makes it look completely normal. I wasn't alone. Millions of people watch Kick and Twitch every day, and a lot of them are in the same fragile place I was.
