@@ -7,7 +7,7 @@
 ![Goal](https://img.shields.io/badge/Goal-1%2C000%20people%20quit-red?style=flat-square)
 
 ---
-Website: [Switch](https://practical-run.replit.app/smokewatch-ui/real-detect)
+Website: [Switch](https://practical-run.replit.app/smokewatch-ui/real-detect](https://practical-run.replit.app/switch-landing/)
 
 My roommate Jude quit smoking after reading *Easy Way to Quit Smoking*. So did I. I thought that was the end of the story.
 
